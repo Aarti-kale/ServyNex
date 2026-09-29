@@ -1,0 +1,47 @@
+:root {
+  --primary: #0f766e;
+  --primary-hover: #115e59;
+
+  --bg: #ffffff;
+  --section-bg: #f8fafc;
+
+  --text: #111827;
+  --subtext: #6b7280;
+
+  --border: #e5e7eb;
+} 
+
+  body {
+    background-color:  var(--bg);
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+  }
+  
+
+  .btn-primary-custom {
+    background-color: var(--primary);
+    color: #fff;
+    border-radius: 8px ;
+    padding: 10px 20px;
+    border: none;
+  }
+  .btn-primary-custome:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  
+  
+
+  .card-custom{
+    background : #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+  
+  
+
+  .card-custom:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
