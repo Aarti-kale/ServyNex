@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import API from "../../../api/api";
 
 import HeroSectionEdit from "../../../components/AdminComponents/websiteCMS/Home/HeroSectionEdit";
-import HowItWorksEdit from "../../../components/AdminComponents/websiteCMS/Home/HowItWorksEdit";
+import HowItworksEdit from "../../../components/AdminComponents/websiteCMS/Home/HowItworksEdit"
 import WhyChooseEdit from "../../../components/AdminComponents/websiteCMS/Home/WhyChooseEdit";
 import CtaEdit from "../../../components/AdminComponents/websiteCMS/Home/CtaEdit";
 import FaqEdit from "../../../components/AdminComponents/websiteCMS/Home/FaqEdit";
@@ -366,7 +366,7 @@ export default function CmsHomepage() {
 
       case "howItWorks":
         return (
-          <HowItWorksEdit
+          <HowItworksEdit
             data={homepageData.howItWorks}
             onChange={(data) => handleSectionChange("howItWorks", data)}
             saving={saving}
