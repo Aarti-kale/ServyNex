@@ -43,7 +43,9 @@ coverage/
 # Runtime files
 *.pid
 *.seed
-
 # Uploads
 Backend/uploads/*
 !Backend/uploads/.gitkeep
+!Backend/uploads/workers/
+Backend/uploads/workers/*
+!Backend/uploads/workers/.gitkeep
