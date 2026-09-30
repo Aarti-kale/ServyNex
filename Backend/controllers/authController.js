@@ -2,50 +2,9 @@ import User from "../models/users.js";
 import jwt from "jsonwebtoken";
 import { successResponse, errorResponse } from "../utils/apiResponse.js";
 
-// export const registerUser = async (req, res) => {
-//   try {
-//     const { name, email, password, role, skills, experience } = req.body;
-
-//     if (!name || !email || !password) {
-//       return errorResponse(res, "Please fill all required fields", 400);
-//     }
-
-//     const userExists = await User.findOne({ email });
-
-//     if (userExists) {
-//       return errorResponse(res, "User already exists", 400);
-//     }
-
-//     const user = await User.create({
-//       name,
-//       email,
-//       password,
-//       role: role || "user",
-
-//       skills: role === "worker" ? skills : [],
-//       experience: role === "worker" ? experience : 0,
-//     });
-
-//     return successResponse(
-//       res,
-//       "User registered successfully",
-//       {
-//         _id: user._id,
-//         name: user.name,
-//         email: user.email,
-//         role: user.role,
-//       },
-//       201
-//     );
-//   } catch (error) {
-//     return errorResponse(res, error.message, 500);
-//   }
-// };
-
-
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, phone, role, skills, experience } = req.body;
+    const { name, email, password, role, skills, experience } = req.body;
 
     if (!name || !email || !password) {
       return errorResponse(res, "Please fill all required fields", 400);
@@ -61,8 +20,8 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password,
-      phone,
       role: role || "user",
+
       skills: role === "worker" ? skills : [],
       experience: role === "worker" ? experience : 0,
     });
@@ -79,21 +38,7 @@ export const registerUser = async (req, res) => {
       201
     );
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
-
-    if (error.name === "ValidationError") {
-      const validationErrors = Object.values(error.errors)
-        .map((err) => err.message)
-        .join(", ");
-
-      return errorResponse(res, validationErrors, 400);
-    }
-
-    if (error.code === 11000) {
-      return errorResponse(res, "Email or username already exists", 400);
-    }
-
-    return errorResponse(res, error.message || "Registration failed", 500);
+    return errorResponse(res, error.message, 500);
   }
 };
 
