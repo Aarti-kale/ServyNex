@@ -18,6 +18,7 @@ import {
 
 import API from "../../../api/api.js";
 
+const PLATFORM_FEE = 20; 
 const TIME_SLOTS = [
   {
     label: "Morning",
@@ -41,9 +42,6 @@ const TIME_SLOTS = [
   },
 ];
 
-// Current platform fee displayed by the booking UI.
-
-// Razorpay checkout script URL.
 const RAZORPAY_SCRIPT_URL = "https://checkout.razorpay.com/v1/checkout.js";
 
 const TRUST_FEATURES = [
