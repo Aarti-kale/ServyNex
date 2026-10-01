@@ -260,6 +260,45 @@ export default function CmsHomepage() {
     }
   };
 
+  const handleCtaSave = async (ctaData) => {
+    try {
+      setSaving(true);
+      setError("");
+      setSuccessMessage("");
+
+      const preparedCta = await prepareCtaData(ctaData);
+
+      const response = await API.put("/admin/webhome", {
+        cta: preparedCta,
+      });
+
+      if (!response.data?.success) {
+        throw new Error(
+          response.data?.message || "Failed to save CTA section."
+        );
+      }
+
+      setHomepageData(response.data.data);
+
+      setSuccessMessage("CTA section saved successfully.");
+    } catch (err) {
+      console.error("CTA section save error:", err);
+
+      console.error(
+        "[CTA Save] Error response:",
+        err?.response?.data
+      );
+
+      setError(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Failed to save CTA section."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSaveAll = async () => {
     if (!homepageData) return;
 
@@ -269,6 +308,7 @@ export default function CmsHomepage() {
       setSuccessMessage("");
 
       const preparedHero = await prepareHeroData(homepageData.hero);
+      const preparedCta = await prepareCtaData(homepageData.cta);
 
       const finalPayload = {
         hero: preparedHero,
@@ -390,6 +430,7 @@ export default function CmsHomepage() {
           <CtaEdit
             data={homepageData.cta}
             onChange={(data) => handleSectionChange("cta", data)}
+            onSave={handleCtaSave}
             saving={saving}
           />
         );

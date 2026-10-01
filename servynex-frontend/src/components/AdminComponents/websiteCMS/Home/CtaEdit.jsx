@@ -21,44 +21,37 @@ const emptyForm = {
   imageFile: null,
 };
 
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return "";
-
-  if (/^https?:\/\//i.test(imagePath)) {
-    return imagePath;
-  }
-
-  return getMediaUrl(imagePath);
-};
-
 const normalizeCtaData = (data) => {
   return {
     title: data?.title ?? emptyForm.title,
-
     description: data?.description ?? emptyForm.description,
-
     buttonText: data?.buttonText ?? emptyForm.buttonText,
-
     buttonLink: data?.buttonLink ?? emptyForm.buttonLink,
-
     image: typeof data?.image === "string" ? data.image : "",
-
     imageFile: null,
   };
 };
 
-const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
-  const [form, setForm] = useState(() => normalizeCtaData(data));
+const CtaEdit = ({
+  data,
+  onChange,
+  onSave,
+  onReset,
+  saving = false,
+}) => {
+  const [form, setForm] = useState(() =>
+    normalizeCtaData(data)
+  );
 
   const [imagePreview, setImagePreview] = useState("");
-
   const [imageError, setImageError] = useState("");
 
   useEffect(() => {
     const normalizedData = normalizeCtaData(data);
 
     const imageFile =
-      typeof File !== "undefined" && data?.imageFile instanceof File
+      typeof File !== "undefined" &&
+      data?.imageFile instanceof File
         ? data.imageFile
         : null;
 
@@ -72,13 +65,12 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
 
     if (imageFile) {
       setImagePreview("");
-
       return;
     }
 
-    const backendImageUrl = getImageUrl(normalizedData.image);
-
-    setImagePreview(backendImageUrl);
+    setImagePreview(
+      getMediaUrl(normalizedData.image)
+    );
   }, [data]);
 
   const handleChange = (field, value) => {
@@ -88,34 +80,28 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
     };
 
     setForm(updatedForm);
-
     emitChange(updatedForm);
   };
 
   const emitChange = (updatedForm) => {
     const payload = {
       title: updatedForm.title ?? "",
-
       description: updatedForm.description ?? "",
-
       buttonText: updatedForm.buttonText ?? "",
-
       buttonLink: updatedForm.buttonLink ?? "",
-
-      image: typeof updatedForm.image === "string" ? updatedForm.image : "",
-
+      image:
+        typeof updatedForm.image === "string"
+          ? updatedForm.image
+          : "",
       imageFile:
-        typeof File !== "undefined" && updatedForm.imageFile instanceof File
+        typeof File !== "undefined" &&
+        updatedForm.imageFile instanceof File
           ? updatedForm.imageFile
           : null,
     };
 
     onChange?.(payload);
   };
-
-  // ============================================================
-  // IMAGE SELECT
-  // ============================================================
 
   const handleImageChange = (event) => {
     const file = event.target.files?.[0];
@@ -124,23 +110,29 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
       return;
     }
 
-    const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+    const allowedTypes = new Set([
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ]);
 
     if (!allowedTypes.has(file.type)) {
-      setImageError("Please select a JPG, PNG or WEBP image.");
+      setImageError(
+        "Please select a JPG, PNG or WEBP image."
+      );
 
       event.target.value = "";
-
       return;
     }
 
     const maxSize = 2 * 1024 * 1024;
 
     if (file.size > maxSize) {
-      setImageError("Image size must be less than 2MB.");
+      setImageError(
+        "Image size must be less than 2MB."
+      );
 
       event.target.value = "";
-
       return;
     }
 
@@ -148,15 +140,11 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
 
     const updatedForm = {
       ...form,
-
       image: "",
-
       imageFile: file,
     };
 
     setForm(updatedForm);
-
-    // No Blob URL.
     setImagePreview("");
 
     emitChange(updatedForm);
@@ -196,11 +184,8 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
 
   const handleSubmit = () => {
     const title = form.title?.trim() || "";
-
     const description = form.description?.trim() || "";
-
     const buttonText = form.buttonText?.trim() || "";
-
     const buttonLink = form.buttonLink?.trim() || "";
 
     if (!title) {
@@ -225,17 +210,16 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
 
     const payload = {
       title,
-
       description,
-
       buttonText,
-
       buttonLink,
-
-      image: typeof form.image === "string" ? form.image : "",
-
+      image:
+        typeof form.image === "string"
+          ? form.image
+          : "",
       imageFile:
-        typeof File !== "undefined" && form.imageFile instanceof File
+        typeof File !== "undefined" &&
+        form.imageFile instanceof File
           ? form.imageFile
           : null,
     };
@@ -243,10 +227,12 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
     onSave?.(payload);
   };
 
-  const hasExistingImage = Boolean(imagePreview) && !form.imageFile;
+  const hasExistingImage =
+    Boolean(imagePreview) && !form.imageFile;
 
   const hasPendingImage =
-    typeof File !== "undefined" && form.imageFile instanceof File;
+    typeof File !== "undefined" &&
+    form.imageFile instanceof File;
 
   return (
     <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -266,15 +252,16 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
             </div>
 
             <div>
-              <h5 className="mb-1 fw-bold" style={{ color: "#0f1724" }}>
+              <h5
+                className="mb-1 fw-bold"
+                style={{ color: "#0f1724" }}
+              >
                 Call To Action
               </h5>
 
               <p
                 className="mb-0 text-secondary"
-                style={{
-                  fontSize: "0.82rem",
-                }}
+                style={{ fontSize: "0.82rem" }}
               >
                 Update homepage call to action section
               </p>
@@ -328,9 +315,7 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
           <div className="d-flex justify-content-between align-items-center mb-2">
             <label
               className="form-label fw-semibold mb-0"
-              style={{
-                color: "#0f1724",
-              }}
+              style={{ color: "#0f1724" }}
             >
               Title *
             </label>
@@ -345,8 +330,11 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
             className="form-control rounded-3"
             value={form.title || ""}
             maxLength={100}
-            onChange={(event) => handleChange("title", event.target.value)}
+            onChange={(event) =>
+              handleChange("title", event.target.value)
+            }
             placeholder="Enter CTA title"
+            disabled={saving}
           />
         </div>
 
@@ -354,9 +342,7 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
           <div className="d-flex justify-content-between align-items-center mb-2">
             <label
               className="form-label fw-semibold mb-0"
-              style={{
-                color: "#0f1724",
-              }}
+              style={{ color: "#0f1724" }}
             >
               Description *
             </label>
@@ -372,9 +358,13 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
             value={form.description || ""}
             maxLength={300}
             onChange={(event) =>
-              handleChange("description", event.target.value)
+              handleChange(
+                "description",
+                event.target.value
+              )
             }
             placeholder="Enter CTA description"
+            disabled={saving}
           />
         </div>
 
@@ -382,9 +372,7 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
           <div className="d-flex justify-content-between align-items-center mb-2">
             <label
               className="form-label fw-semibold mb-0"
-              style={{
-                color: "#0f1724",
-              }}
+              style={{ color: "#0f1724" }}
             >
               Button Text *
             </label>
@@ -399,17 +387,21 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
             className="form-control rounded-3"
             value={form.buttonText || ""}
             maxLength={50}
-            onChange={(event) => handleChange("buttonText", event.target.value)}
+            onChange={(event) =>
+              handleChange(
+                "buttonText",
+                event.target.value
+              )
+            }
             placeholder="Enter button text"
+            disabled={saving}
           />
         </div>
 
         <div className="mb-4">
           <label
             className="form-label fw-semibold mb-2"
-            style={{
-              color: "#0f1724",
-            }}
+            style={{ color: "#0f1724" }}
           >
             Button Link *
           </label>
@@ -418,17 +410,21 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
             type="text"
             className="form-control rounded-3"
             value={form.buttonLink || ""}
-            onChange={(event) => handleChange("buttonLink", event.target.value)}
+            onChange={(event) =>
+              handleChange(
+                "buttonLink",
+                event.target.value
+              )
+            }
             placeholder="/services"
+            disabled={saving}
           />
         </div>
 
         <div className="mb-4">
           <label
             className="form-label fw-semibold mb-2"
-            style={{
-              color: "#0f1724",
-            }}
+            style={{ color: "#0f1724" }}
           >
             CTA Image
           </label>
@@ -459,9 +455,13 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
                     height: "38px",
                   }}
                   onClick={handleRemoveImage}
+                  disabled={saving}
                   title="Remove image"
                 >
-                  <Trash size={15} color="#dc3545" />
+                  <Trash
+                    size={15}
+                    color="#dc3545"
+                  />
                 </button>
               </div>
 
@@ -488,21 +488,26 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
                     backgroundColor: "#dff4ea",
                   }}
                 >
-                  <CheckCircleFill size={22} color="#0e8a5f" />
+                  <CheckCircleFill
+                    size={22}
+                    color="#0e8a5f"
+                  />
                 </div>
 
                 <div className="flex-grow-1">
                   <div
                     className="fw-semibold"
-                    style={{
-                      color: "#0f1724",
-                    }}
+                    style={{ color: "#0f1724" }}
                   >
                     {form.imageFile.name}
                   </div>
 
                   <small className="text-secondary">
-                    {(form.imageFile.size / (1024 * 1024)).toFixed(2)} MB
+                    {(
+                      form.imageFile.size /
+                      (1024 * 1024)
+                    ).toFixed(2)}{" "}
+                    MB
                   </small>
                 </div>
 
@@ -527,7 +532,9 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
                 borderStyle: "dashed",
                 borderColor: "#b9c9c2",
                 backgroundColor: "#fafcfb",
-                cursor: "pointer",
+                cursor: saving
+                  ? "not-allowed"
+                  : "pointer",
               }}
             >
               <div
@@ -538,14 +545,15 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
                   backgroundColor: "#e8f6f0",
                 }}
               >
-                <ImageFill size={22} color="#0e8a5f" />
+                <ImageFill
+                  size={22}
+                  color="#0e8a5f"
+                />
               </div>
 
               <div
                 className="fw-semibold mb-1"
-                style={{
-                  color: "#0f1724",
-                }}
+                style={{ color: "#0f1724" }}
               >
                 Upload CTA Image
               </div>
@@ -562,12 +570,19 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
             accept="image/jpeg,image/png,image/webp"
             className="d-none"
             onChange={handleImageChange}
+            disabled={saving}
           />
 
           {(hasExistingImage || hasPendingImage) && (
             <label
               htmlFor="cta-image-upload"
               className="btn btn-outline-success rounded-3 d-inline-flex align-items-center gap-2"
+              style={{
+                cursor: saving
+                  ? "not-allowed"
+                  : "pointer",
+                opacity: saving ? 0.6 : 1,
+              }}
             >
               <Upload size={15} />
               Change Image
@@ -577,9 +592,7 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
           {imageError && (
             <div
               className="alert alert-danger mt-3 mb-0 rounded-3"
-              style={{
-                fontSize: "0.85rem",
-              }}
+              style={{ fontSize: "0.85rem" }}
             >
               {imageError}
             </div>
@@ -587,11 +600,10 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
 
           <small
             className="text-secondary d-block mt-2"
-            style={{
-              fontSize: "0.75rem",
-            }}
+            style={{ fontSize: "0.75rem" }}
           >
-            Selected image will be uploaded when you save the CTA section.
+            Selected image will be uploaded when you
+            save the CTA section.
           </small>
         </div>
       </div>
@@ -613,6 +625,10 @@ const CtaEdit = ({ data, onChange, onSave, onReset, saving = false }) => {
             className="btn rounded-3 d-flex align-items-center gap-2 px-4 text-white"
             style={{
               backgroundColor: "#0e8a5f",
+              opacity: saving ? 0.7 : 1,
+              cursor: saving
+                ? "not-allowed"
+                : "pointer",
             }}
             onClick={handleSubmit}
             disabled={saving}
