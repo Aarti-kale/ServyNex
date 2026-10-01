@@ -58,7 +58,10 @@ export default function CmsHomepage() {
       uploadResponse = await API.post("/admin/upload/image", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+
         },
+        timeout: 60000,
+
       });
     } catch (uploadError) {
       console.error(`[${sectionName}] IMAGE UPLOAD API ERROR:`, uploadError);
