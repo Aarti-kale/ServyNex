@@ -10,7 +10,6 @@ import rateLimit from "express-rate-limit";
 import path from "path";
 
 dotenv.config();
-console.log("RAZORPAY KEY:", process.env.RAZORPAY_KEY_ID);
 connectDB();
 
 const app = express();
