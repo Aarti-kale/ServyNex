@@ -13,6 +13,16 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+app.use((req, res, next) => {
+  console.log("[REQUEST]", req.method, req.originalUrl);
+
+  res.on("finish", () => {
+    console.log("[RESPONSE]", req.method, req.originalUrl, res.statusCode);
+  });
+
+  next();
+});
 app.set("trust proxy", 1);
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
