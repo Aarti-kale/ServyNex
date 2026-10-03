@@ -23,15 +23,27 @@
 
 
 // import { v2 as cloudinary } from "cloudinary";
+
 import { successResponse, errorResponse } from "../../utils/apiResponse.js";
 import cloudinary from "../../config/cloudinary.js";
 
-
 export const uploadImage = async (req, res) => {
   try {
+    console.log("[Image Upload] Controller reached");
+
     if (!req.file) {
+      console.log("[Image Upload] No file received");
       return errorResponse(res, "Image file is required", 400);
     }
+
+    console.log("[Image Upload] File received:", {
+      filename: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      hasBuffer: Boolean(req.file.buffer),
+    });
+
+    console.log("[Image Upload] Sending file to Cloudinary");
 
     const imageUrl = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
@@ -41,19 +53,28 @@ export const uploadImage = async (req, res) => {
         },
         (error, result) => {
           if (error) {
+            console.error("[Image Upload] Cloudinary callback error:", error);
             return reject(error);
           }
 
           if (!result?.secure_url) {
+            console.error("[Image Upload] Missing secure_url in result");
             return reject(new Error("Cloudinary did not return image URL."));
           }
 
+          console.log("[Image Upload] Cloudinary upload successful");
           resolve(result.secure_url);
         }
       );
 
+      uploadStream.on("error", (error) => {
+        console.error("[Image Upload] Stream error:", error);
+      });
+
       uploadStream.end(req.file.buffer);
     });
+
+    console.log("[Image Upload] Sending response to frontend");
 
     return successResponse(res, "Image uploaded successfully", {
       url: imageUrl,
@@ -62,11 +83,11 @@ export const uploadImage = async (req, res) => {
       size: req.file.size,
     });
   } catch (error) {
-    console.error("Cloudinary image upload error:", error);
+    console.error("[Image Upload] Controller failed:", error);
 
     return errorResponse(
       res,
-      error.message || "Image upload failed",
+      "Image upload failed",
       500
     );
   }
