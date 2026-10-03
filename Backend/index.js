@@ -13,7 +13,6 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
 app.use((req, res, next) => {
   console.log("[REQUEST]", req.method, req.originalUrl);
 
