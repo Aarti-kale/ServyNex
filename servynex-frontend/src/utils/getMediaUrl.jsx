@@ -1,17 +1,45 @@
+// export const getMediaUrl = (imagePath) => {
+//   if (!imagePath) {
+//     return "";
+//   }
+
+//   if (/^https?:\/\//i.test(imagePath)) {
+//     return imagePath;
+//   }
+
+//   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
+
+//   const backendUrl = apiUrl.replace(/\/api\/v1\/?$/, "");
+
+//   const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+
+//   return `${backendUrl}${cleanPath}`;
+// };
+
+// export default getMediaUrl;
+
+
+
 export const getMediaUrl = (imagePath) => {
-  if (!imagePath) {
+  if (!imagePath || typeof imagePath !== "string") {
     return "";
   }
 
-  if (/^https?:\/\//i.test(imagePath)) {
-    return imagePath;
+  const path = imagePath.trim();
+
+  if (!path) {
+    return "";
   }
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+
+  const apiUrl =
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
   const backendUrl = apiUrl.replace(/\/api\/v1\/?$/, "");
-
-  const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
 
   return `${backendUrl}${cleanPath}`;
 };
