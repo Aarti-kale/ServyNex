@@ -1199,38 +1199,18 @@ const AboutCommitmentEdit = ({
   const [imageError, setImageError] = useState("");
 
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const formRef = useRef(initialForm);
 
   const fileInputRef = useRef(null);
 
-  const formRef = useRef(initialForm);
-
   useEffect(() => {
     const normalized = normalizeData(data);
-
+  
     formRef.current = normalized;
-
     setForm(normalized);
-
-    setImagePreview(
-      normalized.image ? getMediaUrl(normalized.image) : ""
-    );
-
+    setImagePreview(normalized.image ? getMediaUrl(normalized.image) : "");
     setImageError("");
   }, [data]);
-
-  const updateForm = (updates) => {
-    const updatedForm = {
-      ...formRef.current,
-      ...updates,
-    };
-
-    formRef.current = updatedForm;
-
-    setForm(updatedForm);
-
-    onChange?.(updatedForm);
-  };
-
   const updatePoint = (index, updates) => {
     const currentForm = formRef.current;
 
@@ -1513,7 +1493,7 @@ const AboutCommitmentEdit = ({
         icon: point.icon || "shield",
       })),
 
-      image: normalizedData.image || "",
+      image: normalizedData.image ||imagePreview || "",
     };
 
     onSave?.(payload);

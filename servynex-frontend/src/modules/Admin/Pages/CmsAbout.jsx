@@ -366,7 +366,13 @@ const CmsAbout = () => {
       }
 
       const preparedSection = await prepareSectionData(sectionData);
-
+      if (
+        sectionName === "commitment" &&
+        !preparedSection.image &&
+        aboutData?.commitment?.image
+      ) {
+        preparedSection.image = aboutData.commitment.image;
+      }
       const cleanedSection = cleanSectionData(preparedSection);
 
       const response = await API.put("/admin/about", {
