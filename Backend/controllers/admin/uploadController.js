@@ -69,6 +69,8 @@ export const uploadImage = async (req, res) => {
 
       uploadStream.on("error", (error) => {
         console.error("[Image Upload] Stream error:", error);
+        reject(error);
+
       });
 
       uploadStream.end(req.file.buffer);
