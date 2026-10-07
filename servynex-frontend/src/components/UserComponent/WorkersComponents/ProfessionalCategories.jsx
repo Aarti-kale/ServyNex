@@ -101,7 +101,7 @@ import {
   BugFill,
 } from "react-bootstrap-icons";
 
-import getMediaUrl from "../../../utils/getMediaUrl";
+import { getMediaUrl } from "../../../utils/getMediaUrl";
 
 const iconMap = {
   electrician: LightningChargeFill,
@@ -132,6 +132,7 @@ const ProfessionalCategories = ({ data = [] }) => {
         <div className="row g-3">
           {data.map((c) => {
             const Icon = iconMap[c.name?.trim().toLowerCase()] || GearFill;
+            const imageUrl = getMediaUrl(c.image);
 
             return (
               <div className="col-6 col-md-3 col-lg-3" key={c._id}>
@@ -151,14 +152,19 @@ const ProfessionalCategories = ({ data = [] }) => {
                       overflow: "hidden",
                     }}
                   >
-                    {c.image ? (
+                    {imageUrl ? (
                       <img
-                        src={getMediaUrl(c.image)}
-                        alt={c.name}
+                        src={imageUrl}
+                        alt={c.name || "Category"}
+                        loading="lazy"
+                        onError={(event) => {
+                          event.currentTarget.style.display = "none";
+                        }}
                         style={{
                           width: "100%",
                           height: "100%",
                           objectFit: "cover",
+                          display: "block",
                         }}
                       />
                     ) : (
