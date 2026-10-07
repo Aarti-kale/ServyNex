@@ -104,23 +104,40 @@ export default function Categories() {
     setPanelOpen(false);
     setEditingCategory(null);
   };
-
-  const handleSaveCategory = async (formData) => {
+  const handleSaveCategory = async (formData, imageFile) => {
     try {
       setSaving(true);
-
-      if (editingCategory?._id) {
-        await API.put(`/admin/categories/${editingCategory._id}`, formData);
-      } else {
-        await API.post("/admin/categories", formData);
+  
+      const payload = {
+        ...formData,
+      };
+  
+      if (imageFile) {
+        const uploadData = new FormData();
+        uploadData.append("image", imageFile);
+  
+        const uploadResponse = await API.post(
+          "/admin/upload/image",
+          uploadData
+        );
+  
+        const uploadedImage = getResponseData(uploadResponse);
+  
+        payload.image = uploadedImage?.url || "";
       }
-
+  
+      if (editingCategory?._id) {
+        await API.put(`/admin/categories/${editingCategory._id}`, payload);
+      } else {
+        await API.post("/admin/categories", payload);
+      }
+  
       closePanel();
-
+  
       await Promise.all([loadCategories(), loadCategoryStats()]);
     } catch (error) {
       console.error("handleSaveCategory error:", error);
-
+  
       window.alert(
         error?.response?.data?.message || "Failed to save category."
       );
@@ -128,7 +145,6 @@ export default function Categories() {
       setSaving(false);
     }
   };
-
   const handleDeleteCategory = async (category) => {
     const confirmed = window.confirm(`Delete "${category.name}" category?`);
 
