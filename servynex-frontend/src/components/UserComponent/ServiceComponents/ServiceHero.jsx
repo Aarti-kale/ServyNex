@@ -201,7 +201,7 @@ const ServiceHero = ({ data = {} }) => {
               style={{
                 backgroundColor: "#eef7f3",
 
-                minHeight: "380px",
+                aspectRatio: "1.35 / 1",
               }}
             >
               {imageUrl ? (
@@ -210,7 +210,10 @@ const ServiceHero = ({ data = {} }) => {
                   alt={hero.title || "ServyNex Services"}
                   className="w-100 h-100"
                   style={{
+                    width: "100%",
+                    height: "100%",
                     objectFit: "cover",
+                    objectPosition: "center",
                   }}
                 />
               ) : (
