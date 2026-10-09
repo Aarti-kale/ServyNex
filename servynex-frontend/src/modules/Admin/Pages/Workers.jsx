@@ -5,6 +5,7 @@ import CustomersFilter from "../../../components/AdminComponents/Customers/Custo
 import WorkerDetails from "../../../components/AdminComponents/Workers/WorkersDetails";
 import WorkersStats from "../../../components/AdminComponents/Workers/WorkersStats";
 import WorkersTable from "../../../components/AdminComponents/Workers/WorkersTable";
+import AddWorkerPanel from "../../../components/AdminComponents/Workers/AddWorkerPanel";
 
 import API from "../../../api/api";
 
@@ -22,6 +23,8 @@ export default function Workers() {
   const [workerReviews, setWorkerReviews] = useState([]);
 
   const [workerActivity, setWorkerActivity] = useState([]);
+
+  const [showAddWorker, setShowAddWorker] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -219,7 +222,8 @@ export default function Workers() {
 
   return (
     <>
-      <WorkersStats stats={stats} />
+      <WorkersStats stats={stats}
+      onAddWorker={() => setShowAddWorker(true)} />
 
       <CustomersFilter
         onSearch={handleSearch}
@@ -236,7 +240,18 @@ export default function Workers() {
         pageLimit={pageLimit}
         onPageLimitChange={handlePageLimitChange}
       />
-
+{showAddWorker && (
+  <AddWorkerPanel
+    onClose={() => setShowAddWorker(false)}
+    onSuccess={async () => {
+      setShowAddWorker(false);
+      await Promise.all([
+        loadWorkers(),
+        loadWorkerStats(),
+      ]);
+    }}
+  />
+)}
       {selectedWorker && (
         <WorkerDetails
           worker={selectedWorker}
@@ -246,6 +261,8 @@ export default function Workers() {
           onClose={handleCloseDetails}
         />
       )}
+
+      
     </>
   );
 }
